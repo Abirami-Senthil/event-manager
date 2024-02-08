@@ -4,6 +4,7 @@ import EventList from './EventList';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import Event from './Event';
 import EventForm from './EventForm';
+import { handleAjaxError } from '../helpers/helpers';
 
 const Editor = () => {
   const [events, setEvents] = useState([]);
@@ -72,6 +73,34 @@ const Editor = () => {
     }
   };
 
+  const updateEvent = async (updatedEvent) => {
+    try {
+      const response = await window.fetch(
+        `/api/events/${updatedEvent.id}`,
+        {
+          method: 'PUT',
+          body: JSON.stringify(updatedEvent),
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+  
+      if (!response.ok) throw Error(response.statusText);
+  
+      const newEvents = events;
+      const idx = newEvents.findIndex((event) => event.id === updatedEvent.id);
+      newEvents[idx] = updatedEvent;
+      setEvents(newEvents);
+  
+      window.alert('Event Updated!');
+      navigate(`/events/${updatedEvent.id}`);
+    } catch (error) {
+      handleAjaxError(error);
+    }
+  };
+
   return (
     <>
       <Header />
@@ -85,6 +114,7 @@ const Editor = () => {
 
             <Routes>
                 <Route path="new" element={<EventForm onSave={addEvent} />} />
+                <Route path=":id/edit" element={<EventForm events={events} onSave={updateEvent} />}/>
                 <Route path=":id" element={<Event events={events} onDelete={deleteEvent} />} />
                 <Route path=":id" element={<Event events={events} />} />
             </Routes>
