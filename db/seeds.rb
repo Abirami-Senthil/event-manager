@@ -7,3 +7,8 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+json = ActiveSupport::JSON.decode(File.read('db/seeds/events.json'))
+json.each do |record|
+  Event.create!(record)
+end
