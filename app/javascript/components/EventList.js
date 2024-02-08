@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import { Link, NavLink } from 'react-router-dom';
 
 const EventList = ({ events }) => {
@@ -20,10 +19,13 @@ const EventList = ({ events }) => {
 
     return (
         <section className="eventList">
-          <h2>Events</h2>
+          <h2>
+            Events
+            <Link to="/events/new">New Event</Link>
+          </h2>
           <ul>{renderEvents(events)}</ul>
         </section>
-      );
+    );
 };
 
 EventList.propTypes = {
